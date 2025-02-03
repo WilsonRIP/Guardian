@@ -4,8 +4,6 @@ import com.anticheat.guardian.Guardian;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MessageUtils {
     
