@@ -8,13 +8,17 @@ import com.anticheat.guardian.commands.StopSpectateCommand;
 import com.anticheat.guardian.commands.PerformanceCommand;
 import com.anticheat.guardian.managers.CheckManager;
 import com.anticheat.guardian.managers.PlayerDataManager;
+import com.anticheat.guardian.utils.MessageUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.io.File;
+import java.util.Collection;
 
 public class Guardian extends JavaPlugin {
     
@@ -26,14 +30,20 @@ public class Guardian extends JavaPlugin {
     
     @Getter
     private PlayerDataManager playerDataManager;
+    
+    @Getter
+    private FileConfiguration messages;
 
     @Override
     public void onEnable() {
         instance = this;
         
+        // Load messages
+        loadMessages();
+        
         // Initialize managers
-        this.checkManager = new CheckManager(this);
-        this.playerDataManager = new PlayerDataManager(this);
+        this.checkManager = new CheckManager();
+        this.playerDataManager = new PlayerDataManager();
         
         // Register listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -41,7 +51,7 @@ public class Guardian extends JavaPlugin {
         // Register commands
         registerCommands();
         
-        getLogger().info("Guardian Anti-Cheat has been enabled!");
+        getLogger().info(MessageUtils.getMessage("plugin.enabled"));
     }
 
     @Override
@@ -51,7 +61,13 @@ public class Guardian extends JavaPlugin {
             playerDataManager.cleanup();
         }
         
-        getLogger().info("Guardian Anti-Cheat has been disabled!");
+        getLogger().info(MessageUtils.getMessage("plugin.disabled"));
+    }
+    
+    private void loadMessages() {
+        saveResource("messages.yml", false);
+        File messagesFile = new File(getDataFolder(), "messages.yml");
+        messages = YamlConfiguration.loadConfiguration(messagesFile);
     }
     
     private void registerCommands() {
@@ -79,17 +95,20 @@ public class Guardian extends JavaPlugin {
                     break;
                 case "reload":
                     if (!sender.hasPermission("guardian.reload")) {
-                        sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
+                        MessageUtils.sendMessage(sender, "commands.no-permission");
                         return true;
                     }
-                    // TODO: Add reload functionality
-                    sender.sendMessage(ChatColor.GREEN + "Guardian has been reloaded!");
+                    reloadConfig();
+                    loadMessages();
+                    playerDataManager.cleanupAll();
+                    checkManager = new CheckManager();
+                    MessageUtils.sendMessage(sender, "commands.reload.success");
                     break;
                 case "version":
-                    sender.sendMessage(ChatColor.GRAY + "Guardian version: " + ChatColor.GREEN + getDescription().getVersion());
+                    MessageUtils.sendMessage(sender, "commands.version", "{version}", getDescription().getVersion());
                     break;
                 default:
-                    sender.sendMessage(ChatColor.RED + "Unknown command. Type /guardian help for help.");
+                    MessageUtils.sendMessage(sender, "commands.unknown");
             }
             return true;
         }
@@ -97,23 +116,23 @@ public class Guardian extends JavaPlugin {
     }
     
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.RED + "Guardian Anti-Cheat Commands:");
-        sender.sendMessage(ChatColor.GRAY + "/guardian help " + ChatColor.WHITE + "- Show this help message");
-        sender.sendMessage(ChatColor.GRAY + "/guardian reload " + ChatColor.WHITE + "- Reload the plugin");
-        sender.sendMessage(ChatColor.GRAY + "/guardian version " + ChatColor.WHITE + "- Show plugin version");
-        sender.sendMessage(ChatColor.GRAY + "/alerts " + ChatColor.WHITE + "- Toggle anticheat alerts");
-        sender.sendMessage(ChatColor.GRAY + "/violations <player> " + ChatColor.WHITE + "- Check player violations");
-        sender.sendMessage(ChatColor.GRAY + "/debug <player> " + ChatColor.WHITE + "- Show detailed debug information");
-        sender.sendMessage(ChatColor.GRAY + "/spectate <player> " + ChatColor.WHITE + "- Spectate a player");
-        sender.sendMessage(ChatColor.GRAY + "/stopspectate " + ChatColor.WHITE + "- Exit spectator mode");
-        sender.sendMessage(ChatColor.GRAY + "/performance " + ChatColor.WHITE + "- View performance metrics");
+        MessageUtils.sendMessage(sender, "commands.help.header");
+        MessageUtils.sendMessage(sender, "commands.help.help");
+        MessageUtils.sendMessage(sender, "commands.help.reload");
+        MessageUtils.sendMessage(sender, "commands.help.version");
+        MessageUtils.sendMessage(sender, "commands.help.alerts");
+        MessageUtils.sendMessage(sender, "commands.help.violations");
+        MessageUtils.sendMessage(sender, "commands.help.debug");
+        MessageUtils.sendMessage(sender, "commands.help.spectate");
+        MessageUtils.sendMessage(sender, "commands.help.stopspectate");
+        MessageUtils.sendMessage(sender, "commands.help.performance");
     }
     
     public void broadcastAlert(String message) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
+        Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
+        for (Player player : onlinePlayers) {
             if (player.hasPermission("guardian.alerts") && AlertsCommand.hasAlertsEnabled(player.getUniqueId())) {
-                player.sendMessage(ChatColor.GRAY + "[" + ChatColor.RED + "Guardian" + ChatColor.GRAY + "] " + 
-                                 ChatColor.WHITE + message);
+                MessageUtils.sendMessage(player, message);
             }
         }
     }

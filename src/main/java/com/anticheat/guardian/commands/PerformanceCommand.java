@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 public class PerformanceCommand extends GuardianCommand {
     
     private static long lastCheck = System.currentTimeMillis();
-    private static int checksPerSecond = 0;
     private static int totalChecks = 0;
     
     public PerformanceCommand(Guardian plugin) {
@@ -38,11 +37,9 @@ public class PerformanceCommand extends GuardianCommand {
     
     public static void incrementChecks() {
         totalChecks++;
-        checksPerSecond++;
     }
     
     public static void resetChecks() {
-        checksPerSecond = 0;
         lastCheck = System.currentTimeMillis();
     }
 } 

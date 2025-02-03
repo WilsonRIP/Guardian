@@ -149,8 +149,8 @@ public class BadPacketsA extends Check {
     private void checkMovementVector(Player player, PlayerData data, 
                                    PlayerMoveEvent event, Vector velocity) {
         // Check for invalid vertical movement
-        if (velocity.getY() > 0 && !player.isFlying() && 
-            !player.isInWater() && !player.isOnGround()) {
+        if (velocity.getY() > 0 && !data.isOnGround() && 
+            !player.isInWater() && !data.isOnGround()) {
             double maxUpward = 0.42; // Maximum upward velocity from jumping
             
             if (velocity.getY() > maxUpward) {

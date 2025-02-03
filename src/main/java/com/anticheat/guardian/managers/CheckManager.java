@@ -1,6 +1,5 @@
 package com.anticheat.guardian.managers;
 
-import com.anticheat.guardian.Guardian;
 import com.anticheat.guardian.checks.combat.AutoClickerA;
 import com.anticheat.guardian.checks.combat.CriticalsA;
 import com.anticheat.guardian.checks.combat.FastBowA;
@@ -39,7 +38,6 @@ import java.util.UUID;
 
 public class CheckManager {
     
-    private final Guardian plugin;
     private final List<KillAuraA> combatChecks = new ArrayList<>();
     private final List<ReachA> reachChecks = new ArrayList<>();
     private final List<Object> movementChecks = new ArrayList<>();
@@ -59,34 +57,32 @@ public class CheckManager {
     private final List<FastBowA> fastBowChecks = new ArrayList<>();
     private final List<GlideA> glideChecks = new ArrayList<>();
     
-    public CheckManager(Guardian plugin) {
-        this.plugin = plugin;
-        
+    public CheckManager() {
         // Register combat checks
-        combatChecks.add(new KillAuraA(plugin));
-        reachChecks.add(new ReachA(plugin));
-        autoClickerChecks.add(new AutoClickerA(plugin));
-        criticalsChecks.add(new CriticalsA(plugin));
-        fastBowChecks.add(new FastBowA(plugin));
+        combatChecks.add(new KillAuraA(null));
+        reachChecks.add(new ReachA(null));
+        autoClickerChecks.add(new AutoClickerA(null));
+        criticalsChecks.add(new CriticalsA(null));
+        fastBowChecks.add(new FastBowA(null));
         
         // Register movement checks
-        movementChecks.add(new SpeedA(plugin));
-        movementChecks.add(new FlightA(plugin));
-        movementChecks.add(new NoFallA(plugin));
-        jesusChecks.add(new JesusA(plugin));
-        phaseChecks.add(new PhaseA(plugin));
-        velocityChecks.add(new VelocityA(plugin));
-        spiderChecks.add(new SpiderA(plugin));
-        strafeChecks.add(new StrafeA(plugin));
-        fastLadderChecks.add(new FastLadderA(plugin));
-        glideChecks.add(new GlideA(plugin));
+        movementChecks.add(new SpeedA(null));
+        movementChecks.add(new FlightA(null));
+        movementChecks.add(new NoFallA(null));
+        jesusChecks.add(new JesusA(null));
+        phaseChecks.add(new PhaseA(null));
+        velocityChecks.add(new VelocityA(null));
+        spiderChecks.add(new SpiderA(null));
+        strafeChecks.add(new StrafeA(null));
+        fastLadderChecks.add(new FastLadderA(null));
+        glideChecks.add(new GlideA(null));
         
         // Register player checks
-        timerChecks.add(new TimerA(plugin));
-        inventoryChecks.add(new InventoryA(plugin));
-        scaffoldChecks.add(new ScaffoldA(plugin));
-        fastBreakChecks.add(new FastBreakA(plugin));
-        badPacketsChecks.add(new BadPacketsA(plugin));
+        timerChecks.add(new TimerA(null));
+        inventoryChecks.add(new InventoryA(null));
+        scaffoldChecks.add(new ScaffoldA(null));
+        fastBreakChecks.add(new FastBreakA(null));
+        badPacketsChecks.add(new BadPacketsA(null));
     }
     
     public void runMovementChecks(Player player, PlayerData data, PlayerMoveEvent event) {

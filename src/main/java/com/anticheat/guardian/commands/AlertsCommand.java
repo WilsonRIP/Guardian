@@ -1,7 +1,6 @@
 package com.anticheat.guardian.commands;
 
 import com.anticheat.guardian.Guardian;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -24,10 +23,10 @@ public class AlertsCommand extends GuardianCommand {
         
         if (alertsEnabled.contains(uuid)) {
             alertsEnabled.remove(uuid);
-            sendMessage(sender, "Anticheat alerts have been " + ChatColor.RED + "disabled" + ChatColor.WHITE + ".");
+            sendMessage(sender, "commands.alerts.disabled");
         } else {
             alertsEnabled.add(uuid);
-            sendMessage(sender, "Anticheat alerts have been " + ChatColor.GREEN + "enabled" + ChatColor.WHITE + ".");
+            sendMessage(sender, "commands.alerts.enabled");
         }
         
         return true;

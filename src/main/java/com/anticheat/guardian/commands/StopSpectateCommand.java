@@ -1,7 +1,6 @@
 package com.anticheat.guardian.commands;
 
 import com.anticheat.guardian.Guardian;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +16,7 @@ public class StopSpectateCommand extends GuardianCommand {
         Player player = (Player) sender;
         
         if (player.getGameMode() != GameMode.SPECTATOR) {
-            sendMessage(sender, ChatColor.RED + "You are not in spectator mode!");
+            sendMessage(sender, "commands.spectate.not-spectating");
             return true;
         }
         
@@ -26,8 +25,7 @@ public class StopSpectateCommand extends GuardianCommand {
         player.setGameMode(previousMode);
         SpectateCommand.clearPreviousGameMode(player.getUniqueId());
         
-        sendMessage(sender, ChatColor.GREEN + "Spectator mode disabled. GameMode restored to " + 
-                   previousMode.toString().toLowerCase() + ".");
+        sendMessage(sender, "commands.spectate.stop", "{gamemode}", previousMode.toString().toLowerCase());
         
         return true;
     }

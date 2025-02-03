@@ -1,0 +1,85 @@
+# Alert messages
+alerts:
+  format: "&c{player} &7failed &c{check} &7({type}) &8- &7VL: &c{vl:.1f}&7/&c{maxVL} &8- &7{info}"
+  console-format: "[Guardian] {player} failed {check} ({type}) - VL: {vl:.1f}/{maxVL} - {info}"
+  staff-spectate: "&e{staff} is now spectating {target}"
+
+# Command responses
+commands:
+  no-permission: "&cYou don't have permission to use this command!"
+  player-only: "&cThis command can only be executed by players!"
+  player-not-found: "&cPlayer not found!"
+  reload:
+    success: "&aConfiguration and data reloaded successfully!"
+  alerts:
+    enabled: "Anticheat alerts have been &aenabled&f."
+    disabled: "Anticheat alerts have been &cdisabled&f."
+  violations:
+    usage: "&cUsage: /guardian violations <player>"
+    no-data: "&cNo violation data found for {player}"
+    header: "&eViolations for {player}:"
+    movement: "&7Movement: &c{vl}"
+    combat: "&7Combat: &c{vl}"
+    recent-hits: "&7Recent Hits: &c{count}"
+    reach-distance: "&7Last Reach Distance: &c{distance}"
+  debug:
+    usage: "&cUsage: /guardian debug <player>"
+    no-data: "&cNo data found for {player}"
+    header: "&eDebug Information for {player}:"
+    location: "&7Location: &f{location}"
+    last-ground: "&7Last Ground: &f{location}"
+    on-ground: "&7On Ground: &f{value}"
+    last-ground-time: "&7Last Ground Time: &f{time}ms ago"
+    last-delta-y: "&7Last Delta Y: &f{value}"
+    combat-stats:
+      header: "&7Combat Stats:"
+      last-attack: "&7 - Last Attack: &f{time}ms ago"
+      hit-count: "&7 - Hit Count: &f{count}"
+      consecutive-hits: "&7 - Consecutive Hits: &f{count}"
+      last-reach: "&7 - Last Reach: &f{distance}"
+  spectate:
+    usage: "&cUsage: /spectate <player>"
+    self: "&cYou cannot spectate yourself!"
+    start: "&aNow spectating {target}&7. Use /stopspectate to exit."
+    not-spectating: "&cYou are not in spectator mode!"
+    stop: "&aSpectator mode disabled. GameMode restored to {gamemode}."
+  help:
+    header: "&cGuardian Anti-Cheat Commands:"
+    help: "&7/guardian help &f- Show this help message"
+    reload: "&7/guardian reload &f- Reload the plugin"
+    version: "&7/guardian version &f- Show plugin version"
+    alerts: "&7/alerts &f- Toggle anticheat alerts"
+    violations: "&7/violations <player> &f- Check player violations"
+    debug: "&7/debug <player> &f- Show detailed debug information"
+    spectate: "&7/spectate <player> &f- Spectate a player"
+    stopspectate: "&7/stopspectate &f- Exit spectator mode"
+    performance: "&7/performance &f- View performance metrics"
+  performance:
+    header: "&eGuardian Performance Metrics:"
+    memory: "&7Memory Usage: &f{used}MB/{total}MB"
+    checks-per-second: "&7Checks/Second: &f{value}"
+    total-checks: "&7Total Checks: &f{count}"
+    active-players: "&7Active Players: &f{count}"
+  version: "&7Guardian version: &a{version}"
+
+# Check-specific messages
+checks:
+  FastLadder:
+    message: "&cUnnatural ladder movement (Speed: {speed:.2f})"
+  Criticals:
+    message: "&cImpossible critical hit (Fall: {distance:.2f})"
+    invalid: "Invalid critical hit: {distance} blocks"
+  BadPackets:
+    invalid-pitch: "Invalid pitch angle: {pitch}"
+    world-change: "World change without teleport"
+    suspicious-rotation: "Suspicious rotation pattern: {variance} variance"
+  KillAura:
+    message: "&cInvalid attack angles ({angle:.2f}°)"
+  Inventory:
+    drag-slots: "Dragged too many slots: {count}"
+
+# Plugin messages
+plugin:
+  prefix: "&7[&cGuardian&7]&f "
+  enabled: "Guardian Anti-Cheat has been enabled!"
+  disabled: "Guardian Anti-Cheat has been disabled!" 

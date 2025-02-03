@@ -1,0 +1,29 @@
+# Main configuration
+settings:
+  alerts:
+    broadcast-range: 30
+    log-to-console: true
+  punishments:
+    max-vl: 15.0
+    commands:
+      - "kick {player} Excessive violations detected"
+      - "ban {player} Unfair gameplay detected"
+
+checks:
+  movement:
+    speed:
+      max-allowed: 1.08
+    flight:
+      max-vertical-speed: 0.6
+  combat:
+    reach:
+      max-distance: 4.25
+    autoclicker:
+      max-cps: 20
+  player:
+    inventory:
+      max-actions-per-second: 15
+
+logging:
+  debug: false
+  violation-storage: true 

@@ -20,7 +20,6 @@ public class ScaffoldA extends Check {
     
     private static final long MIN_PLACE_DELAY = 50L; // Minimum time between block placements
     private static final double MAX_ANGLE = 90.0; // Maximum angle for legitimate block placement
-    private static final double MIN_DISTANCE = 0.5; // Minimum distance to placed block
     
     private final Map<UUID, Long> lastPlaceTime = new HashMap<>();
     private final Map<UUID, Location> lastPlaceLocation = new HashMap<>();

@@ -64,7 +64,7 @@ public class FastLadderA extends Check {
         // Only check once we have enough samples
         if (hasEnoughSamples(samples)) {
             double averageSpeed = calculateAverageSpeed(samples);
-            double maxAllowedSpeed = getMaxAllowedSpeed(player);
+            double maxAllowedSpeed = getMaxAllowedSpeed(player, data);
             
             if (averageSpeed > maxAllowedSpeed) {
                 int vl = violations.getOrDefault(uuid, 0) + 1;
@@ -101,13 +101,13 @@ public class FastLadderA extends Check {
                material == Material.WEEPING_VINES;
     }
     
-    private double getMaxAllowedSpeed(Player player) {
+    private double getMaxAllowedSpeed(Player player, PlayerData data) {
         double maxSpeed = MAX_LADDER_SPEED;
         
         // Adjust for player state
         if (player.isSneaking()) {
             maxSpeed = MAX_LADDER_SPEED_SNEAK;
-        } else if (!player.isOnGround()) {
+        } else if (!data.isOnGround()) {
             maxSpeed = MAX_LADDER_SPEED_JUMP;
         }
         

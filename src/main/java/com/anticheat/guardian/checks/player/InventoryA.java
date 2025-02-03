@@ -4,11 +4,11 @@ import com.anticheat.guardian.Guardian;
 import com.anticheat.guardian.checks.Check;
 import com.anticheat.guardian.checks.CheckCategory;
 import com.anticheat.guardian.data.PlayerData;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -111,7 +111,11 @@ public class InventoryA extends Check {
         if (!item1.getType().isBlock() && !item1.getType().isItem()) return true;
         
         // Check for items with different metadata/durability
-        if (item1.getDurability() != item2.getDurability()) return true;
+        if (item1.hasItemMeta() && item1.getItemMeta() instanceof Damageable) {
+            int durability1 = ((Damageable) item1.getItemMeta()).getDamage();
+            int durability2 = ((Damageable) item2.getItemMeta()).getDamage();
+            return durability1 == durability2;
+        }
         
         return false;
     }

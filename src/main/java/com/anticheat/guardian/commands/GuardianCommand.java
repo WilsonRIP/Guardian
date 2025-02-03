@@ -1,8 +1,8 @@
 package com.anticheat.guardian.commands;
 
 import com.anticheat.guardian.Guardian;
+import com.anticheat.guardian.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,12 +18,12 @@ public abstract class GuardianCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (playerOnly && !(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command can only be executed by players!");
+            MessageUtils.sendMessage(sender, "commands.player-only");
             return true;
         }
         
         if (permission != null && !sender.hasPermission(permission)) {
-            sender.sendMessage(ChatColor.RED + "You don't have permission to use this command!");
+            MessageUtils.sendMessage(sender, "commands.no-permission");
             return true;
         }
         
@@ -33,6 +33,10 @@ public abstract class GuardianCommand implements CommandExecutor {
     protected abstract boolean execute(CommandSender sender, String[] args);
     
     protected void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(ChatColor.GRAY + "[" + ChatColor.RED + "Guardian" + ChatColor.GRAY + "] " + ChatColor.WHITE + message);
+        MessageUtils.sendMessage(sender, message);
+    }
+    
+    protected void sendMessage(CommandSender sender, String message, String... replacements) {
+        MessageUtils.sendMessage(sender, message, replacements);
     }
 } 

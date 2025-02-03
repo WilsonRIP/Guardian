@@ -2,8 +2,8 @@ package com.anticheat.guardian.checks;
 
 import com.anticheat.guardian.Guardian;
 import com.anticheat.guardian.data.PlayerData;
+import com.anticheat.guardian.utils.MessageUtils;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 @Getter
@@ -39,16 +39,14 @@ public abstract class Check {
                 break;
         }
         
-        // Format alert message
-        String alert = String.format(
-            "%s%s failed %s %s check (VL: %.1f/%s) %s",
-            ChatColor.RED,
-            player.getName(),
-            name,
-            type,
-            vl,
-            maxVL,
-            ChatColor.GRAY + "(" + info + ")"
+        // Format alert message using messages.yml
+        String alert = MessageUtils.getMessage("alerts.format", 
+            "{player}", player.getName(),
+            "{check}", name,
+            "{type}", type,
+            "{vl}", String.format("%.1f", vl),
+            "{maxVL}", String.valueOf(maxVL),
+            "{info}", info
         );
         
         // Broadcast to staff
@@ -56,7 +54,15 @@ public abstract class Check {
         
         // Log to console if severe
         if (vl >= maxVL) {
-            plugin.getLogger().warning(ChatColor.stripColor(alert));
+            String consoleMessage = MessageUtils.getMessage("alerts.console-format",
+                "{player}", player.getName(),
+                "{check}", name,
+                "{type}", type,
+                "{vl}", String.format("%.1f", vl),
+                "{maxVL}", String.valueOf(maxVL),
+                "{info}", info
+            );
+            plugin.getLogger().warning(MessageUtils.stripColor(consoleMessage));
         }
     }
     

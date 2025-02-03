@@ -19,7 +19,6 @@ import java.util.UUID;
 public class PhaseA extends Check {
     
     private static final double MIN_DISTANCE = 0.1; // Minimum distance to check for phase
-    private static final double MAX_PHASE_DISTANCE = 0.5; // Maximum allowed phase distance
     private static final int MAX_VIOLATIONS = 5; // Maximum violations before teleporting back
     
     private final Map<UUID, Location> lastSafeLocation = new HashMap<>();
