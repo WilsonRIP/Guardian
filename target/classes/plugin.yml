@@ -1,0 +1,69 @@
+name: Guardian
+version: '1.0-SNAPSHOT'
+main: com.anticheat.guardian.Guardian
+api-version: '1.21'
+authors: [YourName]
+description: A comprehensive anti-cheat system for Minecraft servers
+
+commands:
+  guardian:
+    description: Main command for Guardian anti-cheat
+    usage: /<command> [help|reload|version]
+    permission: guardian.admin
+  alerts:
+    description: Toggle anticheat violation alerts
+    usage: /<command>
+    permission: guardian.alerts
+  violations:
+    description: Check a player's violation levels
+    usage: /<command> <player>
+    permission: guardian.violations
+  debug:
+    description: Show detailed debug information for a player
+    usage: /<command> <player>
+    permission: guardian.debug
+  spectate:
+    description: Spectate a player in spectator mode
+    usage: /<command> <player>
+    permission: guardian.spectate
+  stopspectate:
+    description: Exit spectator mode
+    usage: /<command>
+    permission: guardian.spectate
+  performance:
+    description: View anticheat performance metrics
+    usage: /<command>
+    permission: guardian.performance
+
+permissions:
+  guardian.admin:
+    description: Allows access to all Guardian commands
+    default: op
+    children:
+      guardian.alerts: true
+      guardian.violations: true
+      guardian.debug: true
+      guardian.reload: true
+      guardian.spectate: true
+      guardian.performance: true
+  guardian.alerts:
+    description: Allows receiving anticheat alerts
+    default: op
+  guardian.violations:
+    description: Allows checking player violations
+    default: op
+  guardian.debug:
+    description: Allows viewing detailed debug information
+    default: op
+  guardian.reload:
+    description: Allows reloading the plugin
+    default: op
+  guardian.spectate:
+    description: Allows spectating suspicious players
+    default: op
+  guardian.performance:
+    description: Allows viewing performance metrics
+    default: op
+  guardian.bypass:
+    description: Bypasses all anti-cheat checks
+    default: op 
