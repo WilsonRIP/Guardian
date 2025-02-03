@@ -23,12 +23,17 @@ public class BadPacketsA extends Check {
     private static final double MAX_DELTA_YAW = 40.0;
     private static final int SAMPLE_SIZE = 20;
     private static final double MAX_TELEPORT_DISTANCE = 100.0;
+    private static final int MAX_PACKETS_PER_SECOND = 80;
+    private static final long PACKET_CHECK_INTERVAL = 1000L;
     
     private final Map<UUID, Location> lastLocation = new HashMap<>();
     private final Map<UUID, Float> lastYaw = new HashMap<>();
     private final Map<UUID, Float> lastPitch = new HashMap<>();
     private final Map<UUID, LinkedList<Double>> yawChanges = new HashMap<>();
     private final Map<UUID, Integer> violations = new HashMap<>();
+    private final Map<UUID, Integer> packetCounter = new HashMap<>();
+    private final Map<UUID, Long> lastPacketCheck = new HashMap<>();
+    private final Map<UUID, Double> lastDeltaY = new HashMap<>();
     
     public BadPacketsA(Guardian plugin) {
         super(plugin, "BadPackets", "A", CheckCategory.PLAYER, 5.0, false);
@@ -38,9 +43,17 @@ public class BadPacketsA extends Check {
         if (player.hasPermission("guardian.bypass") || 
             player.getGameMode() == GameMode.SPECTATOR) return;
         
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        
+        // Check packet rate
+        checkPacketRate(player, data, uuid, now);
+        
         Location to = event.getTo();
         Location from = event.getFrom();
-        UUID uuid = player.getUniqueId();
+        
+        // Skip if locations are null
+        if (to == null || from == null) return;
         
         // Check for invalid pitch
         float pitch = to.getPitch();
@@ -52,6 +65,23 @@ public class BadPacketsA extends Check {
             event.setCancelled(true);
             return;
         }
+        
+        // Check for timer/packet manipulation
+        double deltaY = to.getY() - from.getY();
+        Double lastDelta = lastDeltaY.get(uuid);
+        
+        if (lastDelta != null) {
+            // Check for impossible Y motion changes
+            if (Math.abs(deltaY - lastDelta) > 3.0 && !player.isFlying()) {
+                fail(player, data,
+                    String.format("Invalid Y motion change: %.3f", Math.abs(deltaY - lastDelta)),
+                    1.0
+                );
+                event.setCancelled(true);
+                return;
+            }
+        }
+        lastDeltaY.put(uuid, deltaY);
         
         // Check for sudden teleports
         Location last = lastLocation.get(uuid);
@@ -190,11 +220,40 @@ public class BadPacketsA extends Check {
         return baseSpeed;
     }
     
+    private void checkPacketRate(Player player, PlayerData data, UUID uuid, long now) {
+        Long lastCheck = lastPacketCheck.get(uuid);
+        int packets = packetCounter.getOrDefault(uuid, 0) + 1;
+        
+        if (lastCheck == null) {
+            lastCheck = now;
+            lastPacketCheck.put(uuid, now);
+        }
+        
+        if (now - lastCheck > PACKET_CHECK_INTERVAL) {
+            // Check if packet rate exceeds limit
+            if (packets > MAX_PACKETS_PER_SECOND) {
+                fail(player, data,
+                    String.format("Too many packets: %d/s", packets),
+                    Math.min(packets / (double)MAX_PACKETS_PER_SECOND, 2.0)
+                );
+            }
+            
+            // Reset counter
+            packetCounter.put(uuid, 0);
+            lastPacketCheck.put(uuid, now);
+        } else {
+            packetCounter.put(uuid, packets);
+        }
+    }
+    
     public void cleanup(UUID uuid) {
         lastLocation.remove(uuid);
         lastYaw.remove(uuid);
         lastPitch.remove(uuid);
         yawChanges.remove(uuid);
         violations.remove(uuid);
+        packetCounter.remove(uuid);
+        lastPacketCheck.remove(uuid);
+        lastDeltaY.remove(uuid);
     }
 } 

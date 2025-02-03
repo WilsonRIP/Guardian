@@ -9,6 +9,7 @@ import com.anticheat.guardian.checks.movement.FlightA;
 import com.anticheat.guardian.checks.movement.GlideA;
 import com.anticheat.guardian.checks.movement.JesusA;
 import com.anticheat.guardian.checks.movement.NoFallA;
+import com.anticheat.guardian.checks.movement.NoSlowA;
 import com.anticheat.guardian.checks.movement.PhaseA;
 import com.anticheat.guardian.checks.movement.SpeedA;
 import com.anticheat.guardian.checks.movement.SpiderA;
@@ -56,6 +57,7 @@ public class CheckManager {
     private final List<FastLadderA> fastLadderChecks = new ArrayList<>();
     private final List<FastBowA> fastBowChecks = new ArrayList<>();
     private final List<GlideA> glideChecks = new ArrayList<>();
+    private final List<NoSlowA> noSlowChecks = new ArrayList<>();
     
     public CheckManager() {
         // Register combat checks
@@ -76,6 +78,7 @@ public class CheckManager {
         strafeChecks.add(new StrafeA(null));
         fastLadderChecks.add(new FastLadderA(null));
         glideChecks.add(new GlideA(null));
+        noSlowChecks.add(new NoSlowA(null));
         
         // Register player checks
         timerChecks.add(new TimerA(null));
@@ -142,6 +145,11 @@ public class CheckManager {
         
         // Run Glide checks on movement
         for (GlideA check : glideChecks) {
+            check.handle(player, data, event);
+        }
+        
+        // Run NoSlow checks on movement
+        for (NoSlowA check : noSlowChecks) {
             check.handle(player, data, event);
         }
     }
@@ -289,6 +297,9 @@ public class CheckManager {
             check.cleanup(uuid);
         }
         for (GlideA check : glideChecks) {
+            check.cleanup(uuid);
+        }
+        for (NoSlowA check : noSlowChecks) {
             check.cleanup(uuid);
         }
     }
