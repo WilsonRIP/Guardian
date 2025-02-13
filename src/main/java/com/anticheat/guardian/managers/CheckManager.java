@@ -21,6 +21,7 @@ import com.anticheat.guardian.checks.player.FastBreakA;
 import com.anticheat.guardian.checks.player.InventoryA;
 import com.anticheat.guardian.checks.player.ScaffoldA;
 import com.anticheat.guardian.checks.player.TimerA;
+import com.anticheat.guardian.checks.player.RegenA;
 import com.anticheat.guardian.data.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -32,6 +33,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerVelocityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,7 @@ public class CheckManager {
     private final List<FastBowA> fastBowChecks = new ArrayList<>();
     private final List<GlideA> glideChecks = new ArrayList<>();
     private final List<NoSlowA> noSlowChecks = new ArrayList<>();
+    private final List<RegenA> regenChecks = new ArrayList<>();
     
     public CheckManager() {
         // Register combat checks
@@ -86,6 +89,7 @@ public class CheckManager {
         scaffoldChecks.add(new ScaffoldA(null));
         fastBreakChecks.add(new FastBreakA(null));
         badPacketsChecks.add(new BadPacketsA(null));
+        regenChecks.add(new RegenA(null));
     }
     
     public void runMovementChecks(Player player, PlayerData data, PlayerMoveEvent event) {
@@ -252,6 +256,16 @@ public class CheckManager {
         }
     }
     
+    public void runRegenChecks(Player player, PlayerData data, EntityRegainHealthEvent event) {
+        if (player.hasPermission("guardian.bypass")) {
+            return;
+        }
+        
+        for (RegenA check : regenChecks) {
+            check.handle(player, data, event);
+        }
+    }
+    
     public void cleanup(UUID uuid) {
         // Clean up any check-specific data
         for (TimerA check : timerChecks) {
@@ -300,6 +314,9 @@ public class CheckManager {
             check.cleanup(uuid);
         }
         for (NoSlowA check : noSlowChecks) {
+            check.cleanup(uuid);
+        }
+        for (RegenA check : regenChecks) {
             check.cleanup(uuid);
         }
     }

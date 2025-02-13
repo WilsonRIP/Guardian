@@ -28,12 +28,19 @@ public abstract class Check {
     protected void fail(Player player, PlayerData data, String info, double vl) {
         if (player.hasPermission("guardian.bypass")) return;
         
+        int currentVL = 0;
         switch (category) {
             case COMBAT:
                 data.incrementCombatVL();
+                currentVL = data.getCombatVL();
                 break;
             case MOVEMENT:
                 data.incrementMovementVL();
+                currentVL = data.getMovementVL();
+                break;
+            case PLAYER:
+                data.incrementCombatVL();
+                currentVL = data.getCombatVL();
                 break;
             default:
                 break;
@@ -46,7 +53,8 @@ public abstract class Check {
             "{type}", type,
             "{vl}", String.format("%.1f", vl),
             "{maxVL}", String.valueOf(maxVL),
-            "{info}", info
+            "{info}", info,
+            "{currentVL}", String.valueOf(currentVL)
         );
         
         // Broadcast to staff
@@ -60,7 +68,8 @@ public abstract class Check {
                 "{type}", type,
                 "{vl}", String.format("%.1f", vl),
                 "{maxVL}", String.valueOf(maxVL),
-                "{info}", info
+                "{info}", info,
+                "{currentVL}", String.valueOf(currentVL)
             );
             plugin.getLogger().warning(MessageUtils.stripColor(consoleMessage));
         }

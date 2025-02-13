@@ -1,7 +1,7 @@
 # Alert messages
 alerts:
-  format: "&c{player} &7failed &c{check} &7({type}) &8- &7VL: &c{vl:.1f}&7/&c{maxVL} &8- &7{info}"
-  console-format: "[Guardian] {player} failed {check} ({type}) - VL: {vl:.1f}/{maxVL} - {info}"
+  format: "&c{player} &7failed &c{check} &7({type}) &8- &7VL: &c{vl:.1f}&7/&c{maxVL} &8- &7{info} &8(&7Current VL: &c{currentVL}&8)"
+  console-format: "[Guardian] {player} failed {check} ({type}) - VL: {vl:.1f}/{maxVL} - {info} (Current VL: {currentVL})"
   staff-spectate: "&e{staff} is now spectating {target}"
 
 # Command responses
@@ -77,6 +77,8 @@ checks:
     message: "&cInvalid attack angles ({angle:.2f}°)"
   Inventory:
     drag-slots: "Dragged too many slots: {count}"
+  Regen:
+    message: "&cFast regeneration detected"
 
 # Plugin messages
 plugin:

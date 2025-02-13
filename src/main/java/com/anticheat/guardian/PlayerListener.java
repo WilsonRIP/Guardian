@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 @RequiredArgsConstructor
 public class PlayerListener implements Listener {
@@ -47,6 +48,19 @@ public class PlayerListener implements Listener {
             if (data != null) {
                 // Trigger combat-related checks
                 plugin.getCheckManager().runCombatChecks(player, data, event);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            PlayerData data = plugin.getPlayerDataManager().getPlayerData(player);
+
+            if (data != null) {
+                // Trigger regen checks
+                plugin.getCheckManager().runRegenChecks(player, data, event);
             }
         }
     }
